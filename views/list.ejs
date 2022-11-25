@@ -33,11 +33,27 @@
       </nav>
 
 
-      <h2 class = "m1-2 my-3">서버에서 가져온 할일 리스트</h2>
+      <!-- 제이쿼리로 ajax 요청 -->
+      <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+      <h2 class = "m1-2 my-3 text-center">서버에서 가져온 할일 리스트</h2>
+
+      <div class = "container input-group mb-2">
+        <input class = "form-control" id = "search-input">
+        <button class = "input-group-append btn btn-danger" id = "search">검색</button>
+      </div>
+
+      <script>
+        $('#search').click(function() {
+          let inputValue = $('#search-input').val();
+          window.location.replace('/search?value=' + inputValue);
+        })
+      </script>
  
       <ul class = "list-group">
         <% for(let i = 0; i < posts.length; i++) { %>
         <li class = "list-group-item">
+          <p>글번호 :  <%=  posts[i]._id %> </p>
           <h4>할일 제목 : <%=  posts[i].todo %></h4>
           <p>날짜 : <%= posts[i].date %></p>
           <button class = 'btn btn-danger delete'>삭제</button><p></p>
@@ -45,17 +61,29 @@
         <% } %>
       </ul>
 
-      <!-- 제이쿼리로 ajax 요청 -->
-      <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  
   
       <script>
+        $('.delete').click(function(e) {
+          var num = e.target.dataset.id;
+          console.log(num);
+          var btnClick = $(this);
+
+        })
         $.ajax({
           method : 'DELETE',
           url : '/delete',
-          data : {_id : 4}  // 삭제할 게시물 번호
+          data : {_id : num}  // 삭제할 게시물 번호
         }).done(function(result) {
           // 요청 성공하면 요걸 실행해주세요.
           console.log('삭제 성공');
+          //삭제 대상을 안보이게 처리하는 루틴
+          btnClick.parent('li').fadeout();
+          location.reload();                        // 내가 발행한 것(=로그인)만 삭제하게끔
+
+        }).fail(function(xhr, textStatus, errThrown) {
+          // 요청 실패하면 여기
+          console.log(xhr, textStatus, errThrown);
         })         
       </script>
 
