@@ -433,3 +433,6 @@ io.on('connection', function(socket) {
         io.to(socket.id).emit('broadcast', data);   // 일대일 통신 (개별적으로)
     })
 })
+
+
+// 
